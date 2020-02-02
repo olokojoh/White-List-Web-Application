@@ -1,0 +1,909 @@
+{% extends "base.html" %}
+{ % import "bootstrap/wtf.html" as wtf % }
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript">
+    $('#date, #date_edit').datepicker({
+        weekStart: 1,
+        autoclose: true,
+        daysOfWeekHighlighted: "0,6",
+        format: "yyyy-mm-dd",
+        language: "zh-CN"
+    });
+    </script>
+{% endblock %}
+{% block title %}私募白名单{% endblock %}
+
+{% block page_content %}
+<script src="\static\js\jquery-3.4.1.js"></script>
+<script>
+
+    function EditProduct(id, pp_established_time, pp_name, pp_management_scale, pp_futures_scale, pp_qualification, stock , futures , bond , fof , own , regular , q_Stock_long , q_Market_neutral , q_Stock_high_frequency , q_Trend , q_Arbitrage , q_High_frequency , nq_Stock_long , nq_Market_neutral , nq_Stock_high_frequency , nq_Trend , nq_Arbitrage , nq_High_frequency , bond_s , mix , note, RoW_ratio , pp_cooperation_mod , pp_partner_broker , reward_within_3yrs , pp_partner_bank, visitor , c_name , c_position , c_cellphone , address , date , memo){
+        document.getElementById('editPP').style.display='block';
+        document.getElementById('fade').style.display='block';
+        document.getElementById('pp_id_edit').value = id;
+        document.getElementById('pp_name_edit').value = pp_name;
+        document.getElementById('pp_management_scale_edit').value = pp_management_scale;
+        document.getElementById('pp_futures_scale_edit').value = pp_futures_scale;
+
+        if(pp_qualification == '仅备案'){
+            document.getElementsByClassName('pp_qualification_edit')[0].checked = true;
+        }   
+        else if(pp_qualification == '仅会员'){
+            document.getElementsByClassName('pp_qualification_edit')[1].checked = true;
+        }
+        else if(pp_qualification == '投顾资质'){
+            document.getElementsByClassName('pp_qualification_edit')[2].checked = true;
+        }
+
+        if(q_Stock_long=='' || q_Market_neutral=='' || q_Stock_high_frequency=='' || q_Trend=='' || q_Arbitrage=='' || q_High_frequency=='' || nq_Stock_long=='' || nq_Market_neutral=='' || nq_Stock_high_frequency=='' || nq_Trend=='' || nq_Arbitrage=='' || nq_High_frequency=='' || bond_s=='' || mix==''){
+            document.getElementById('selectAll_edit').checked = false;
+        }
+        else{
+            document.getElementById('selectAll_edit').checked = true;
+        }
+
+        if(stock=='股票'){
+            document.getElementById('stock_edit').checked = true;
+        }
+        else{
+            document.getElementById('stock_edit').checked = false;
+        }
+
+        if(futures=='期货'){
+            document.getElementById('futures_edit').checked = true;
+        }
+        else{
+            document.getElementById('futures_edit').checked = false;
+        }
+
+        if(bond=='债券'){
+            document.getElementById('bond_edit').checked = true;
+        }
+        else{
+            document.getElementById('bond_edit').checked = false;
+        }
+
+        if(q_Stock_long=='量化-股票多头'){
+            document.getElementById('q_Stock_long_edit').checked = true;
+        }
+        else{
+            document.getElementById('q_Stock_long_edit').checked = false;
+        }
+
+        if(q_Market_neutral=='量化-股票中性'){
+            document.getElementById('q_Market_neutral_edit').checked = true;
+        }
+        else{
+            document.getElementById('q_Market_neutral_edit').checked = false;
+        }
+
+        if(q_Stock_high_frequency=='量化-股票高频'){
+            document.getElementById('q_Stock_high_frequency_edit').checked = true;
+        }
+        else{
+            document.getElementById('q_Stock_high_frequency_edit').checked = false;
+        }
+
+        if(q_Trend=='量化-期货趋势'){
+            document.getElementById('q_Trend_edit').checked = true;
+        }
+        else{
+            document.getElementById('q_Trend_edit').checked = false;
+        }
+
+        if(q_Arbitrage=='量化-期货套利'){
+            document.getElementById('q_Arbitrage_edit').checked = true;
+        }
+        else{
+            document.getElementById('q_Arbitrage_edit').checked = false;
+        }
+
+        if(q_High_frequency=='量化-期货高频'){
+            document.getElementById('q_High_frequency_edit').checked = true;
+        }
+        else{
+            document.getElementById('q_High_frequency_edit').checked = false;
+        }
+
+        if(nq_Stock_long=='人工-股票多头'){
+            document.getElementById('nq_Stock_long_edit').checked = true;
+        }
+        else{
+            document.getElementById('nq_Stock_long_edit').checked = false;
+        }
+
+        if(nq_Market_neutral=='人工-股票中性'){
+            document.getElementById('nq_Market_neutral_edit').checked = true;
+        }
+        else{
+            document.getElementById('nq_Market_neutral_edit').checked = false;
+        }
+
+        if(nq_Stock_high_frequency=='人工-股票高频'){
+            document.getElementById('nq_Stock_high_frequency_edit').checked = true;
+        }
+        else{
+            document.getElementById('nq_Stock_high_frequency_edit').checked = false;
+        }
+
+        if(nq_Trend=='人工-期货趋势'){
+            document.getElementById('nq_Trend_edit').checked = true;
+        }
+        else{
+            document.getElementById('nq_Trend_edit').checked = false;
+        }
+
+        if(nq_Arbitrage=='人工-期货套利'){
+            document.getElementById('nq_Arbitrage_edit').checked = true;
+        }
+        else{
+            document.getElementById('nq_Arbitrage_edit').checked = false;
+        }
+
+        if(nq_High_frequency=='人工-期货高频'){
+            document.getElementById('nq_High_frequency_edit').checked = true;
+        }
+        else{
+            document.getElementById('nq_High_frequency_edit').checked = false;
+        }
+
+        if(bond_s=='债券策略'){
+            document.getElementById('bond_s_edit').checked = true;
+        }
+        else{
+            document.getElementById('bond_s_edit').checked = false;
+        }
+
+        if(mix=='混合策略'){
+            document.getElementById('mix_edit').checked = true;
+        }
+        else{
+            document.getElementById('mix_edit').checked = false;
+        }
+        
+        if(fof=='fof子资金'){
+            document.getElementById('fof_edit').checked = true;
+        }
+        else{
+            document.getElementById('fof_edit').checked = false;
+        }
+
+        if(own=='公司自有资金'){
+            document.getElementById('own_edit').checked = true;
+        }
+        else{
+            document.getElementById('own_edit').checked = false;
+        }
+
+        if(regular=='普通资金'){
+            document.getElementById('regular_edit').checked = true;
+        }
+        else{
+            document.getElementById('regular_edit').checked = false;
+        }
+
+        document.getElementById('pp_cooperation_mod_edit').value = pp_cooperation_mod;
+        document.getElementById('pp_established_time_edit').value = pp_established_time;
+        document.getElementById('RoW_ratio_edit').value = RoW_ratio;
+        document.getElementById('reward_within_3yrs_edit').value = reward_within_3yrs;
+        document.getElementById('pp_partner_broker_edit').value = pp_partner_broker;
+        document.getElementById('address_edit').value = address;
+        document.getElementById('date_edit').value = date;
+        document.getElementById('pp_partner_bank_edit').value = pp_partner_bank;
+        document.getElementById('visitor_edit').value = visitor; 
+        document.getElementById('c_name_edit').value = c_name;
+        document.getElementById('c_position_edit').value = c_position;
+        document.getElementById('c_cellphone_edit').value = c_cellphone;
+
+        fileList = memo.split(" | ");
+        fileList.pop();
+        var html = "";
+        for(i=0; i<fileList.length; i++){
+            html = html + "<div id='" + fileList[i] + "'> <div style='font-size:20px; display:inline; margin-right:5%'>" + fileList[i] + "</div>" + 
+            "<button name='downloadfile' formaction='/downloadfilexx' type='submit' class='btn btn-success btn-xs' value='" + fileList[i] + "'>download</button> " +
+            "<a name='deletefile' onclick=\"" + "df('" + fileList[i] + "')\" class='btn btn-danger btn-xs' value='" + 
+            fileList[i] + "'>delete</a> <br> </div>"
+        }
+
+        fhtml = "<div style='text-align:right; width:75%'>" + html + "</div>"
+        document.getElementById('memo_edit').innerHTML = fhtml;
+
+        document.getElementById('memoE').value = memo;
+        document.getElementById('note_edit').value = note.replace(/_/g, '\r\n');
+    }
+
+    function SelectAllstrategy(){
+        x = document.getElementById('selectAll').checked;
+        document.getElementById('q_Stock_long').checked = x;
+        document.getElementById('q_Market_neutral').checked = x;
+        document.getElementById('q_Stock_high_frequency').checked = x;
+        document.getElementById('q_Trend').checked = x;
+        document.getElementById('q_Arbitrage').checked = x;
+        document.getElementById('q_High_frequency').checked = x;
+        document.getElementById('nq_Stock_long').checked = x;
+        document.getElementById('nq_Market_neutral').checked = x;
+        document.getElementById('nq_Stock_high_frequency').checked = x;
+        document.getElementById('nq_Trend').checked = x;
+        document.getElementById('nq_Arbitrage').checked = x;
+        document.getElementById('nq_High_frequency').checked = x;
+        document.getElementById('bond_s').checked = x;
+        document.getElementById('mix').checked = x;
+    }
+
+    function SelectAllstrategy_edit(){
+        x = document.getElementById('selectAll_edit').checked;
+        document.getElementById('q_Stock_long_edit').checked = x;
+        document.getElementById('q_Market_neutral_edit').checked = x;
+        document.getElementById('q_Stock_high_frequency_edit').checked = x;
+        document.getElementById('q_Trend_edit').checked = x;
+        document.getElementById('q_Arbitrage_edit').checked = x;
+        document.getElementById('q_High_frequency_edit').checked = x;
+        document.getElementById('nq_Stock_long_edit').checked = x;
+        document.getElementById('nq_Market_neutral_edit').checked = x;
+        document.getElementById('nq_Stock_high_frequency_edit').checked = x;
+        document.getElementById('nq_Trend_edit').checked = x;
+        document.getElementById('nq_Arbitrage_edit').checked = x;
+        document.getElementById('nq_High_frequency_edit').checked = x;
+        document.getElementById('bond_s_edit').checked = x;
+        document.getElementById('mix_edit').checked = x;
+    }
+
+    function Select_All_filter(){
+        x = document.getElementById('sas').checked;
+        document.getElementById('S_q_Stock_long').checked = x;
+        document.getElementById('S_q_Market_neutral').checked = x;
+        document.getElementById('S_q_Stock_high_frequency').checked = x;
+        document.getElementById('S_q_Trend').checked = x;
+        document.getElementById('S_q_Arbitrage').checked = x;
+        document.getElementById('S_q_High_frequency').checked = x;
+        document.getElementById('S_nq_Stock_long').checked = x;
+        document.getElementById('S_nq_Market_neutral').checked = x;
+        document.getElementById('S_nq_Stock_high_frequency').checked = x;
+        document.getElementById('S_nq_Trend').checked = x;
+        document.getElementById('S_nq_Arbitrage').checked = x;
+        document.getElementById('S_nq_High_frequency').checked = x;
+        document.getElementById('S_bond_s').checked = x;
+        document.getElementById('S_mix').checked = x;
+
+    }
+
+    function Select_All_fund(){
+        x = document.getElementById('saf').checked;
+        document.getElementById('S_fof').checked = x;
+        document.getElementById('S_own').checked = x;
+        document.getElementById('S_regular').checked = x;
+    }
+
+    function check_if_AllS(id){
+        x1 = document.getElementById('S_q_Stock_long').checked;
+        x2 = document.getElementById('S_q_Market_neutral').checked;
+        x3 = document.getElementById('S_q_Stock_high_frequency').checked;
+        x4 = document.getElementById('S_q_Trend').checked;
+        x5 = document.getElementById('S_q_Arbitrage').checked;
+        x6 = document.getElementById('S_q_High_frequency').checked;
+        x7 = document.getElementById('S_nq_Stock_long').checked;
+        x8 = document.getElementById('S_nq_Market_neutral').checked;
+        x9 = document.getElementById('S_nq_Stock_high_frequency').checked;
+        x10 = document.getElementById('S_nq_Trend').checked;
+        x11 = document.getElementById('S_nq_Arbitrage').checked;
+        x12 = document.getElementById('S_nq_High_frequency').checked;
+        x13 = document.getElementById('S_bond_s').checked;
+        x14 = document.getElementById('S_mix').checked;
+        allx = x1 && x2 && x3 && x4 && x5 && x6 && x7 && x8 && x9 && x10 && x11 && x12 && x13 && x14;
+        if(!document.getElementById(id).checked){
+            document.getElementById('sas').checked = false;
+        }
+        else if(allx){
+            document.getElementById('sas').checked = true;
+        }
+    }
+
+    function check_if_AllF(id){
+        x1 = document.getElementById('S_fof').checked;
+        x2 = document.getElementById('S_own').checked;
+        x3 = document.getElementById('S_regular').checked;
+        allx = x1 && x2 && x3
+        if(!document.getElementById(id).checked){
+            document.getElementById('saf').checked = false;
+        }
+        else if(allx){
+            document.getElementById('saf').checked = true;
+        }
+    }
+    
+    function df(filename){
+        document.getElementById(filename).innerHTML = '';
+        str = document.getElementById('memoE').value;
+        newfilelist = str.replace(filename+" | ","");
+        document.getElementById('memoE').value = newfilelist;
+    }
+
+    $(document).ready(function(){
+        $('.sxsx').click(function(){
+            document.getElementById('xxxx').click();
+        });
+    });
+
+    // $(
+    //     function () {
+    //         var chart = echarts.init(document.getElementById('bar'), 'white', {renderer: 'canvas'});
+    //         $.ajax({
+    //             type: "GET",
+    //             url: "http://127.0.0.1:5000/read_csv",
+    //             dataType: 'json',
+    //             success: function (result) {
+    //                 chart.setOption(result);
+    //             }
+    //         });
+    //     }
+    // )
+</script>
+
+<style> 
+
+        .black_overlay{ 
+            display: none; 
+            position: absolute; 
+            top: 0%; 
+            left: 0%; 
+            width: 100%; 
+            height: 170%; 
+            background-color: black; 
+            z-index:1001; 
+            -moz-opacity: 0.8; 
+            opacity:.80; 
+            filter: alpha(opacity=88); 
+        } 
+        .white_content { 
+            display: none; 
+            position: absolute; 
+            top: 5%; 
+            left: 20%; 
+            width: 60%; 
+            height: 145%; 
+            padding: 20px; 
+            border: 4px solid gray; 
+            background-color: white; 
+            z-index:1002;
+            overflow: auto; 
+        }
+
+        fieldset{
+            background-color: #f1f1f1;
+            border: none;
+            border-radius: 2px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            padding: 0.625em;
+        }
+
+        label{
+            cursor: pointer;
+            display: inline-block;
+            padding: 3px 6px;
+            text-align: right;
+            width: 150px;
+            vertical-align: top;
+        }
+
+        td {
+            text-align:center;
+            vertical-align:middle;
+            white-space:nowrap;
+        }
+
+        #tabProduct{
+            table-layout:fixed;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        #tabProduct td {
+            text-align:center;
+            vertical-align:middle;
+            white-space:nowrap;
+            overflow:hidden;
+            text-overflow: ellipsis;
+        }
+
+</style>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+<div>
+    <h3 style="font-size: 30px ;text-align: center; margin-bottom: 20px; margin-top: 10px">私募白名单</h3>
+    <form style="width: 100%; text-align: center; white-space:nowrap;" id="search" name="search" method="POST" action="/search">
+        {{ Sform.hidden_tag() }}
+        {{ Sform.search_PP.label(style='font-size: 18px; vertical-align: middle') }}
+        {{ Sform.search_PP(class="form-control", style='font-size: 18px; height: 30px; width: 200px; display: inline', placeholder='私募名称') }}
+        {{ Sform.search_strategy.label(style='font-size: 18px; vertical-align: middle') }}
+        {{ Sform.search_strategy(class="form-control", style='font-size: 18px; height: 30px; width: 200px; display: inline', placeholder='投资策略') }}
+        {{ Sform.search_fund.label(style='font-size: 18px; vertical-align: middle') }}
+        {{ Sform.search_fund(class="form-control", style='font-size: 18px; height: 30px; width: 200px; display: inline', placeholder='可投资金') }}
+        {{ Sform.search_management_scale.label(style='font-size: 18px; vertical-align: middle') }}
+        {{ Sform.search_management_scale(class="form-control", style='font-size: 18px; height: 30px; width: 200px; display: inline', placeholder='管理规模') }}
+        {{ Sform.search_Referrer.label(style='font-size: 18px; vertical-align: middle') }}
+        {{ Sform.search_Referrer(class="form-control", style='font-size: 18px; height: 30px; width: 200px; display: inline', placeholder='引入人') }}
+        {{ Sform.search(class="btn", style='font-size: 15px; margin-left: 10px; margin-bottom: 10px') }}
+    </form>
+    <form style="width: 100%; margin: 0 auto; display: none" id="filter" name="filter" method="POST" action="/filter">
+        {{ Fform.hidden_tag() }}
+        <table class="table table-bordered">
+            <tr>
+                <th style="text-align: center">{{ Fform.S_pp_inv_strategy.label(style='font-size: 20px; text-align: center')}}</th>
+                <th colspan="2" style="text-align: center">{{ Fform.S_pp_stock.label(style='font-size: 20px; text-align: center') }}</th>
+                <th colspan="2" style="text-align: center">{{ Fform.S_pp_future.label(style='font-size: 20px; text-align: center') }}</th>
+                <th style="text-align: center">{{ Fform.S_fund.label(style='font-size: 20px; text-align: center') }}</th>
+                {{ Fform.Search(id='xxxx', class="btn btn-info", style='font-size: 15px; float: right; margin-right: 200px; display: none') }}
+            </tr>
+            <tr>
+                <td>{{ Fform.S_AllS.label(style='font-size: 20px') }} {{ Fform.S_AllS(class='sxsx', id='sas', style='zoom:180%', onclick="Select_All_filter()") }}</td>
+                <td>{{ Fform.S_q_Stock_long.label(style='font-size: 20px') }}   {{ Fform.S_q_Stock_long(class='sxsx', id='S_q_Stock_long', style='zoom:180%', onclick="check_if_AllS('S_q_Stock_long')") }}</td>
+                <td>{{ Fform.S_nq_Stock_long.label(style='font-size: 20px') }}  {{ Fform.S_nq_Stock_long(class='sxsx', id='S_nq_Stock_long', style='zoom:180%', onclick="check_if_AllS('S_nq_Stock_long')") }}</td>
+                <td>{{ Fform.S_q_Trend.label(style='font-size: 20px') }}        {{ Fform.S_q_Trend(class='sxsx', id='S_q_Trend', style='zoom:180%', onclick="check_if_AllS('S_q_Trend')") }}</td>
+                <td>{{ Fform.S_nq_Trend.label(style='font-size: 20px') }}       {{ Fform.S_nq_Trend(class='sxsx', id='S_nq_Trend', style='zoom:180%', onclick="check_if_AllS('S_nq_Trend')") }}</td>
+                <td>{{ Fform.S_fof.label(style='font-size: 20px') }}                     {{ Fform.S_fof(class='sxsx', id='S_fof', style='zoom:180%') }}</td>
+            </tr>
+            <tr>
+                <td>{{ Fform.S_mix.label(style='font-size: 20px') }}                {{ Fform.S_mix(class='sxsx', id='S_mix', style='zoom:180%', onclick="check_if_AllS('S_mix')") }}</td>
+                <td>{{ Fform.S_q_Market_neutral.label(style='font-size: 20px') }}   {{ Fform.S_q_Market_neutral(class='sxsx', id='S_q_Market_neutral', style='zoom:180%', onclick="check_if_AllS('S_q_Market_neutral')") }}</td>
+                <td>{{ Fform.S_nq_Market_neutral.label(style='font-size: 20px') }}  {{ Fform.S_nq_Market_neutral(class='sxsx', id='S_nq_Market_neutral', style='zoom:180%', onclick="check_if_AllS('S_nq_Market_neutral')") }}</td>
+                <td>{{ Fform.S_q_Arbitrage.label(style='font-size: 20px') }}        {{ Fform.S_q_Arbitrage(class='sxsx', id='S_q_Arbitrage', style='zoom:180%', onclick="check_if_AllS('S_q_Arbitrage')") }}</td>
+                <td>{{ Fform.S_nq_Arbitrage.label(style='font-size: 20px') }}       {{ Fform.S_nq_Arbitrage(class='sxsx', id='S_nq_Arbitrage', style='zoom:180%', onclick="check_if_AllS('S_nq_Arbitrage')") }}</td>
+                <td>{{ Fform.S_own.label(style='font-size: 20px') }}                     {{ Fform.S_own(class='sxsx', id='S_own', style='zoom:180%') }}</td>
+            </tr>
+            <tr>
+                <td>{{ Fform.S_bond_s.label(style='font-size: 20px') }}                     {{ Fform.S_bond_s(class='sxsx', id='S_bond_s', style='zoom:180%', onclick="check_if_AllS('S_bond_s')") }}</td>
+                <td>{{ Fform.S_q_Stock_high_frequency.label(style='font-size: 20px') }}     {{ Fform.S_q_Stock_high_frequency(class='sxsx', id='S_q_Stock_high_frequency', style='zoom:180%', onclick="check_if_AllS('S_q_Stock_high_frequency')") }}</td>
+                <td>{{ Fform.S_nq_Stock_high_frequency.label(style='font-size: 20px') }}    {{ Fform.S_nq_Stock_high_frequency(class='sxsx', id='S_nq_Stock_high_frequency', style='zoom:180%', onclick="check_if_AllS('S_nq_Stock_high_frequency')") }}</td>
+                <td>{{ Fform.S_q_High_frequency.label(style='font-size: 20px') }}           {{ Fform.S_q_High_frequency(class='sxsx', id='S_q_High_frequency', style='zoom:180%', onclick="check_if_AllS('S_q_High_frequency')") }}</td>
+                <td>{{ Fform.S_nq_High_frequency.label(style='font-size: 20px') }}          {{ Fform.S_nq_High_frequency(class='sxsx', id='S_nq_High_frequency', style='zoom:180%', onclick="check_if_AllS('S_nq_High_frequency')") }}</td>
+                <td>{{ Fform.S_regular.label(style='font-size: 20px') }}                 {{ Fform.S_regular(class='sxsx', id='S_regular', style='zoom:180%') }}</td>    
+            </tr>
+        </tr>
+    </table>
+    
+    </form>
+
+    <form id="form1" name="form1" method="POST" action="/delete">
+    <table id='tabProduct' class="table table-hover table-bordered">
+    <div style="font-size: 20px"><strong>符合条件的私募：{{num}}个</strong></div><br>
+    <tr class="info" style="font-size: 18px; font-weight: bold; white-space: nowrap; text-align: center">
+        <!-- 表头 -->
+        <td style="width: 40px"></td>
+        <td style="width: 5%">私募名称</td>
+        <td style="width: 50px; white-space: nowrap">私募资质</td>
+        <td style="width: 50px; text-align: center; white-space: nowrap">管理规模</td>
+        <td style="width: 50px; text-align: center; white-space: nowrap">期货规模</td>
+        <td style="width: 50px; text-align: center">投资策略</td>
+        <td style="width: 100px">公司亮点</td>
+        <!-- <td style="width: 50px; white-space: nowrap">投资范围</td> -->
+        <td style="width: 100px; white-space: nowrap">近三年所获奖项</td>
+        <td style="width: 70px; white-space: nowrap">收益回撤比</td>
+        <td style="width: 50px; white-space: nowrap">合作模式</td>
+        <td style="width: 50px; white-space: nowrap">可投资金</td>
+        <td style="width: 120px; white-space: nowrap">已合作银行/券商/期货</td>
+        <!-- <td style="width: 110px">地址</td>
+        <td style="width: 91px">日期</td> -->
+		<td style="width: 70px; white-space: nowrap">引入人</td>
+        <td style="width: 70px">对接人</td>
+        <!-- <td style="width: 80px">联系人</td>
+        <td style="width: 60px">职务</td>
+        <td style="width: 110px">联系方式</td>
+        <td style="width: 120px">公司介绍</td> -->
+        {% if current_user.authority != '查询员' %}
+        <td style="width: 40px"></td>
+        {% endif %}
+    </tr>
+        <!-- 循环读取数据 -->
+        {% for i in u %}
+            <tr style="text-align: center; height: 40px;">
+                <td align="center" bgcolor="#FFFFFF"><input style="zoom: 180%" type="checkbox" name="checkbox2" value={{ i[0].id }} /></td>
+                <td> <a title="{{ i[0].pp_name }}" href="{{ url_for('detail', ppid=i[0].id) }}">{{ i[0].pp_name }}</a></td>
+                <td title="{{ i[0].pp_qualification }}">{{ i[0].pp_qualification }}</td>
+                <td title="{{ '{:,}'.format(i[0].pp_management_scale/100000000)[:-2] }}亿">{{ '{:,}'.format(i[0].pp_management_scale/100000000) }}亿</td>
+                <td title="{{ '{:,}'.format(i[0].pp_futures_scale/100000000)[:-2] }}亿">{{ '{:,}'.format(i[0].pp_futures_scale/100000000) }}亿</td>
+                <td>
+                    {% if i[2].q_Stock_long == '量化-股票多头' or i[2].q_Market_neutral == '量化-股票中性' or i[2].q_Stock_high_frequency == '量化-股票高频' or i[2].nq_Stock_long == '人工-股票多头' or i[2].nq_Market_neutral == '人工-股票中性' or i[2].nq_Stock_high_frequency == '人工-股票高频' %}
+                        <div>股票策略</div>
+                    {% endif %}
+                    
+                    {% if i[2].q_Trend == '量化-期货趋势' or i[2].q_Arbitrage == '量化-期货套利' or i[2].q_High_frequency == '量化-期货高频' or i[2].nq_Trend == '人工-期货趋势' or i[2].nq_Arbitrage == '人工-期货套利' or i[2].nq_High_frequency == '人工-期货高频' %}
+                        <div>期货策略</div>
+                    {% endif %}
+                                        
+                    {% if i[2].bond_s == '债券策略' %}
+                        <div>债券策略</div>
+                    {% endif %}
+                    
+                    {% if i[2].mix == '混合策略' %}
+                        <div>混合策略</div>
+                    {% endif %}                    
+                </td>
+                <td title="{{ i[0].note }}">{{ i[0].note.replace('_', '\r\n') }}</td>
+                <td title="{{ i[0].reward_within_3yrs }}">{{ i[0].reward_within_3yrs }}</td>
+                <!-- <td>
+                    {% if i[1].stock == '股票' %}
+                        <div>股票</div>
+                    {% endif %}
+                    {% if i[1].futures == '期货' %}
+                        <div>期货</div>
+                    {% endif %}
+                    {% if i[1].bond == '债券' %}
+                        <div>债券</div>
+                    {% endif %}
+                </td> -->
+                <td title="{{ i[0].RoW_ratio }}">{{ i[0].RoW_ratio }}</td>
+                <td title="{{ i[0].pp_cooperation_mod }}">{{ i[0].pp_cooperation_mod }}</td>
+                <td>
+                    {% if i[3].fof == 'fof子资金' %}
+                        <div>fof子资金</div>
+                    {% endif %}
+                    {% if i[3].own == '公司自有资金' %}
+                        <div>公司自有资金</div>
+                    {% endif %}
+                    {% if i[3].regular == '普通资金' %}
+                        <div>普通资金</div>
+                    {% endif %} 
+                </td>
+                <td title="{{ i[0].pp_partner_broker }}">{{ i[0].pp_partner_broker }}</td>
+                <td title="{{ i[0].pp_partner_bank }}">{{ i[0].pp_partner_bank }}</td>
+                <td title="{{ i[4].visitor }}">{{ i[4].visitor }}</td>
+                {% if current_user.authority != '查询员' %}
+                <td><input class="btn btn-warning" type="button" name="edit" value="编辑" onclick="EditProduct('{{i[0].id}}', '{{i[0].pp_established_time}}', '{{i[0].pp_name}}', '{{i[0].pp_management_scale/100000000}}', '{{i[0].pp_futures_scale/100000000}}', '{{i[0].pp_qualification}}', '{{ i[1].stock }}', '{{ i[1].futures }}', '{{ i[1].bond }}', '{{ i[3].fof }}', '{{ i[3].own }}', '{{ i[3].regular }}', '{{ i[2].q_Stock_long }}', '{{ i[2].q_Market_neutral }}', '{{ i[2].q_Stock_high_frequency }}', '{{ i[2].q_Trend }}', '{{ i[2].q_Arbitrage }}', '{{ i[2].q_High_frequency }}', '{{ i[2].nq_Stock_long }}', '{{ i[2].nq_Market_neutral }}', '{{ i[2].nq_Stock_high_frequency }}', '{{ i[2].nq_Trend }}', '{{ i[2].nq_Arbitrage }}', '{{ i[2].nq_High_frequency }}', '{{ i[2].bond_s }}', '{{ i[2].mix }}', '{{ i[0].note }}', '{{ i[0].RoW_ratio }}', '{{ i[0].pp_cooperation_mod }}', '{{ i[0].pp_partner_broker }}', '{{ i[0].reward_within_3yrs }}', '{{ i[0].pp_partner_bank }}', '{{ i[4].visitor }}', '{{ i[4].c_name }}', '{{ i[4].c_position }}', '{{ i[4].c_cellphone }}', '{{ i[4].address }}', '{{ i[4].date }}', '{{ i[0].memo }}')"  /></td>
+                {% endif %}
+            </tr>
+            {% if loop.last %}
+                {% if 10-loop.index > 0 %}
+                    {% for i in range(10-loop.index) %}
+                        <tr style="text-align: center; height: 60px;">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            {% if current_user.authority != '查询员' %}
+                            <td></td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </table>
+    <br>
+    <div>
+    {% if current_user.authority != '查询员' %}
+    <input class="btn btn-primary" style="margin:0 auto" type="button" name="add" value="添加" onclick="document.getElementById('addPP').style.display='block';document.getElementById('fade').style.display='block'" />  
+    {% endif %}
+    {% if current_user.authority == '管理员' %}
+        <input class="btn btn-danger" type="submit" name="delete" value="删除" onclick="" />
+    {% endif %}
+    <input class="btn btn-success" type="button" name="reload" value="刷新" onclick="window.location.reload()" />
+    </div>
+
+    {% if pagination %}
+    <div style="text-align: center; width: 100%" class="pagination">
+        {{ macros.pagination_widget(pagination, '.index') }}
+    </div>
+    {% endif %}
+    </form>
+
+    <!-- 弹窗添加数据 -->
+    <div style="margin:0 auto;" id="addPP" class="white_content">
+            <form style='width:100%; margin:0 auto' method="POST" enctype="multipart/form-data" action="/add">
+            　{{ form.hidden_tag() }}
+              {{ form.pp_id(style='display: none') }}
+            <table style="width: 90%; margin:0 auto;">
+            <tr>
+                <td colspan="4" style="font-size: 26px;">私募信息</td>
+            </tr>
+            <tr>
+                <td  colspan="4" style="height: 30px"></td>
+            </tr>
+            <tr>
+                <td>{{ form.pp_name.label(style='font-size: 20px') }}</td>
+                <td colspan="3">{{ form.pp_name(class="form-control", size=50, style='font-size: 20px; height: 30px;', placeholder='请输入名称') }}</td>
+                {% for error in form.pp_name.errors %}
+                <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </tr>
+            <tr>
+                <td>{{ form.pp_established_time.label(style='font-size: 20px') }}</td>
+                <td colspan="3">{{ form.pp_established_time(class="form-control", style='font-size: 20px; height: 30px', placeholder='请输入成立时间') }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.pp_management_scale.label(style='font-size: 20px; height: 30px') }}</td>
+                <td colspan="3">
+                    <div style="width:100%" class="input-group">
+                    {{ form.pp_management_scale(class="form-control", style='font-size: 20px', placeholder='请输入总规模') }}
+                    <div style="font-size: 20px;" class="input-group-addon">亿</div>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ form.pp_futures_scale.label(style='font-size: 20px; height: 30px') }}</td>
+                <td colspan="3">
+                    <div style="width:100%" class="input-group">
+                    {{ form.pp_futures_scale(class="form-control", style='font-size: 20px', placeholder='请输入期货规模') }}
+                    <div style="font-size: 20px;" class="input-group-addon">亿</div>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ form.pp_qualification.label(style='font-size: 20px') }}</td>
+                <td colspan="3">
+                    {% for i in form.pp_qualification %}
+                        {{ i.label(style='font-size: 20px') }}
+                        {{ i(style='zoom:180%') }}
+                    {% endfor %}
+                </td>
+                <!-- <td colspan="3">{{ form.pp_qualification(class="form-control", size=50, style='font-size: 20px; height: 30px', placeholder='请输入私募资质') }}</td> -->
+            </tr>
+            <tr>
+                <td>{{ form.pp_inv_scope.label(style='font-size: 20px') }}</td>
+                <td>{{ form.stock.label(style='font-size: 20px') }}   {{ form.stock(style='zoom:180%') }}</td>
+                <td>{{ form.futures.label(style='font-size: 20px') }} {{ form.futures(style='zoom:180%') }}</td>
+                <td>{{ form.bond.label(style='font-size: 20px') }}    {{ form.bond(style='zoom:180%; margin-right: 54px') }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.fund.label(style='font-size: 20px;') }}</td>
+                <td>{{ form.fof.label(style='font-size: 20px; width: 144px') }}{{ form.fof(style='zoom:180%') }}</td>
+                <td>{{ form.own.label(style='font-size: 20px; width: 179px') }}{{ form.own(style='zoom:180%') }}</td>
+                <td>{{ form.regular.label(style='font-size: 20px; width: 156px') }}{{ form.regular(style='zoom:180%;') }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.pp_inv_strategy.label(style='font-size: 20px') }}
+                <td>{{ form.allS.label(style='font-size: 20px;') }} {{ form.allS(id="selectAll", style='zoom:180%', onclick="SelectAllstrategy()") }}
+                <td>{{ form.bond_s.label(style='font-size: 20px;') }} {{ form.bond_s(class='cl', style='zoom:180%') }}
+                <td>{{ form.mix.label(style='font-size: 20px;') }} {{ form.mix(class='cl', style='zoom:180%;') }}<br>
+            </tr>
+            <tr>
+                <td></td>
+                <td>{{ form.q_Stock_long.label(style='font-size: 20px;') }}            {{ form.q_Stock_long(class='cl', style='zoom:180%') }}</td>
+                <td>{{ form.q_Market_neutral.label(style='font-size: 20px;') }}        {{ form.q_Market_neutral(class='cl', style='zoom:180%') }}</td>
+                <td>{{ form.q_Stock_high_frequency.label(style='font-size: 20px;') }}  {{ form.q_Stock_high_frequency(class='cl', style='zoom:180%;') }}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>{{ form.q_Trend.label(style='font-size: 20px;') }}                 {{ form.q_Trend(class='cl', style='zoom:180%') }}</td>
+                <td>{{ form.q_Arbitrage.label(style='font-size: 20px;') }}             {{ form.q_Arbitrage(class='cl', style='zoom:180%') }}</td>
+                <td>{{ form.q_High_frequency.label(style='font-size: 20px;') }}        {{ form.q_High_frequency(class='cl', style='zoom:180%;') }}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>{{ form.nq_Stock_long.label(style='font-size: 20px;') }}            {{ form.nq_Stock_long(class='cl', style='zoom:180%') }}</td>
+                <td>{{ form.nq_Market_neutral.label(style='font-size: 20px;') }}        {{ form.nq_Market_neutral(class='cl', style='zoom:180%') }}</td>
+                <td>{{ form.nq_Stock_high_frequency.label(style='font-size: 20px;') }}  {{ form.nq_Stock_high_frequency(class='cl', style='zoom:180%;') }}</td>
+            </tr>
+            <tr>
+                <td></td>    
+                <td>{{ form.nq_Trend.label(style='font-size: 20px;') }}                 {{ form.nq_Trend(class='cl', style='zoom:180%') }}</td>
+                <td>{{ form.nq_Arbitrage.label(style='font-size: 20px;') }}             {{ form.nq_Arbitrage(class='cl', style='zoom:180%') }}</td>
+                <td>{{ form.nq_High_frequency.label(style='font-size: 20px;') }}        {{ form.nq_High_frequency(class='cl', style='zoom:180%;') }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.note.label(style='font-size: 20px') }}</td>
+                <td colspan="3">{{ form.note(class="form-control", style='height: 200px; font-size: 20px') }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.RoW_ratio.label(style='font-size: 20px; height: 30px') }}</td>
+                <td colspan="3">{{ form.RoW_ratio(class="form-control", style='font-size: 20px') }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.pp_cooperation_mod.label(style='font-size: 20px') }}</td>
+                <td colspan="3">{{ form.pp_cooperation_mod(class="form-control", style='font-size: 20px; height: 30px', placeholder='请输入合作模式') }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.pp_partner_broker.label(style='font-size: 20px;') }}</td>
+                <td colspan="3">{{ form.pp_partner_broker(class="form-control", style='font-size: 20px; height: 30px;', placeholder='请输入已合作银行/券商/期货') }}</td>
+        　  </tr>
+            <tr>
+                <td>{{ form.reward_within_3yrs.label(style='font-size: 20px') }}</td>
+                <td colspan="3">{{ form.reward_within_3yrs(class="form-control", style='font-size: 20px; height: 50px', placeholder='请输入近三年所获奖项') }}</td>
+            </tr>
+            <tr> 
+                <td>{{ form.pp_partner_bank.label(style='font-size: 20px') }}</td>
+                <td colspan="3">{{ form.pp_partner_bank(class="form-control", style='font-size: 20px; height: 30px', placeholder='请输入推荐该私募机构的成员') }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.visitor.label(style='font-size: 20px') }}</td>
+                <td colspan="3">{{ form.visitor(class="form-control", style='font-size: 20px; height: 30px', placeholder='请输入拜访人') }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.c_name.label(style='font-size: 20px') }}</td>
+                <td colspan="3">{{ form.c_name(class="form-control", style='font-size: 20px; height: 30px', placeholder='请输入私募机构联系人姓名') }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.c_position.label(style='font-size: 20px') }}</td>
+                <td colspan="3">{{ form.c_position(class="form-control", style='font-size: 20px; height: 30px', placeholder='请输入私募机构联系人职务') }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.c_cellphone.label(style='font-size: 20px') }}</td>
+                <td colspan="3">{{ form.c_cellphone(class="form-control", style='font-size: 20px; height: 30px', placeholder='请输入私募机构联系人联系方式') }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.address.label(style='font-size: 20px') }}</td>
+                <td colspan="3">{{ form.address(class="form-control", style='font-size: 20px; height: 30px', placeholder='请输入公司地址') }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.memoF.label(style='font-size: 20px') }}</td>
+                <td colspan="3">{{ form.memoF() }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.date.label(style='font-size: 20px') }}</td>
+                <td colspan="3">{{ form.date(class="form-control", style='font-size: 20px; height: 30px', placeholder='请输入日期') }}</td>
+            </tr>
+            <tr class="form-actions">
+                <td colspan="4">
+                    {{ form.submit(class="btn btn-primary", style='font-size: 20px;') }}
+                    <button type="button" class="btn" onclick = "document.getElementById('addPP').style.display='none';document.getElementById('fade').style.display='none'" style="font-size: 20px">取消</button>
+                </td>
+            </tr>
+            </table>
+            </form>
+        </div>
+    
+    <div style="margin:0 auto;" id="editPP" class="white_content">
+            <form style='width:100%; margin:0 auto' method="POST" enctype="multipart/form-data" action="/edit">
+            　{{ form.hidden_tag() }}
+              {{ form.pp_id(id='pp_id_edit', style='display: none') }}
+            <table style="width: 90%; margin:0 auto;">
+            <tr>
+                <td colspan="4" style="font-size: 26px;">私募信息</td>
+            </tr>
+            <tr>
+                <td  colspan="4" style="height: 30px"></td>
+            </tr>
+            <tr>
+                <td>{{ form.pp_name.label(style='font-size: 20px') }}</td>
+                <td colspan="3">{{ form.pp_name(id='pp_name_edit', class="form-control", size=50, style='font-size: 20px; height: 30px;', placeholder='请输入名称') }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.pp_established_time.label(style='font-size: 20px') }}</td>
+                <td colspan="3">{{ form.pp_established_time(id='pp_established_time_edit', class="form-control", style='font-size: 20px; height: 30px', placeholder='请输入成立时间') }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.pp_management_scale.label(style='font-size: 20px; height: 30px') }}</td>
+                <td colspan="3">
+                    <div style="width:100%" class="input-group">
+                    {{ form.pp_management_scale(id='pp_management_scale_edit', class="form-control", style='font-size: 20px', placeholder='请输入总规模/期货规模') }}
+                    <div style="font-size: 20px;" class="input-group-addon">亿</div>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ form.pp_futures_scale.label(style='font-size: 20px; height: 30px') }}</td>
+                <td colspan="3">
+                    <div style="width:100%" class="input-group">
+                    {{ form.pp_futures_scale(id='pp_futures_scale_edit', class="form-control", style='font-size: 20px', placeholder='请输入总规模/期货规模') }}
+                    <div style="font-size: 20px;" class="input-group-addon">亿</div>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ form.pp_qualification.label(style='font-size: 20px') }}</td>
+                <td colspan="3">{% for i in form.pp_qualification %}
+                    {{ i.label(style='font-size: 20px') }}
+                    {{ i(class='pp_qualification_edit', style='zoom:180%') }}
+                {% endfor %}
+            </td>
+        </tr>
+            <tr>
+                <td>{{ form.pp_inv_scope.label(style='font-size: 20px') }}</td>
+                <td>{{ form.stock.label(style='font-size: 20px') }}   {{ form.stock(id='stock_edit', style='zoom:180%') }}</td>
+                <td>{{ form.futures.label(style='font-size: 20px') }} {{ form.futures(id='futures_edit', style='zoom:180%') }}</td>
+                <td>{{ form.bond.label(style='font-size: 20px') }}    {{ form.bond(id='bond_edit', style='zoom:180%; margin-right: 54px') }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.fund.label(style='font-size: 20px;') }}</td>
+                <td>{{ form.fof.label(style='font-size: 20px; width: 144px') }}{{ form.fof(id='fof_edit', style='zoom:180%') }}</td>
+                <td>{{ form.own.label(style='font-size: 20px; width: 179px') }}{{ form.own(id='own_edit', style='zoom:180%') }}</td>
+                <td>{{ form.regular.label(style='font-size: 20px; width: 156px') }}{{ form.regular(id='regular_edit', style='zoom:180%;') }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.pp_inv_strategy.label(style='font-size: 20px') }}
+                <td>{{ form.allS.label(style='font-size: 20px;') }} {{ form.allS(id="selectAll_edit", style='zoom:180%', onclick="SelectAllstrategy_edit()") }}
+                <td>{{ form.bond_s.label(style='font-size: 20px;') }} {{ form.bond_s(id='bond_s_edit', class='cl', style='zoom:180%') }}
+                <td>{{ form.mix.label(style='font-size: 20px;') }} {{ form.mix(id='mix_edit', class='cl', style='zoom:180%;') }}<br>
+            </tr>
+            <tr>
+                <td></td>
+                <td>{{ form.q_Stock_long.label(style='font-size: 20px;') }}            {{ form.q_Stock_long(id='q_Stock_long_edit', class='cl', style='zoom:180%') }}</td>
+                <td>{{ form.q_Market_neutral.label(style='font-size: 20px;') }}        {{ form.q_Market_neutral(id='q_Market_neutral_edit', class='cl', style='zoom:180%') }}</td>
+                <td>{{ form.q_Stock_high_frequency.label(style='font-size: 20px;') }}  {{ form.q_Stock_high_frequency(id='q_Stock_high_frequency_edit', class='cl', style='zoom:180%;') }}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>{{ form.q_Trend.label(style='font-size: 20px;') }}                 {{ form.q_Trend(id='q_Trend_edit', class='cl', style='zoom:180%') }}</td>
+                <td>{{ form.q_Arbitrage.label(style='font-size: 20px;') }}             {{ form.q_Arbitrage(id='q_Arbitrage_edit', class='cl', style='zoom:180%') }}</td>
+                <td>{{ form.q_High_frequency.label(style='font-size: 20px;') }}        {{ form.q_High_frequency(id='q_High_frequency_edit', class='cl', style='zoom:180%;') }}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>{{ form.nq_Stock_long.label(style='font-size: 20px;') }}            {{ form.nq_Stock_long(id='nq_Stock_long_edit', class='cl', style='zoom:180%') }}</td>
+                <td>{{ form.nq_Market_neutral.label(style='font-size: 20px;') }}        {{ form.nq_Market_neutral(id='nq_Market_neutral_edit', class='cl', style='zoom:180%') }}</td>
+                <td>{{ form.nq_Stock_high_frequency.label(style='font-size: 20px;') }}  {{ form.nq_Stock_high_frequency(id='nq_Stock_high_frequency_edit', class='cl', style='zoom:180%;') }}</td>
+            </tr>
+            <tr>
+                <td></td>    
+                <td>{{ form.nq_Trend.label(style='font-size: 20px;') }}                 {{ form.nq_Trend(id='nq_Trend_edit', class='cl', style='zoom:180%') }}</td>
+                <td>{{ form.nq_Arbitrage.label(style='font-size: 20px;') }}             {{ form.nq_Arbitrage(id='nq_Arbitrage_edit', class='cl', style='zoom:180%') }}</td>
+                <td>{{ form.nq_High_frequency.label(style='font-size: 20px;') }}        {{ form.nq_High_frequency(id='nq_High_frequency_edit', class='cl', style='zoom:180%;') }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.note.label(style='font-size: 20px') }}</td>
+                <td colspan="3">{{ form.note(id='note_edit', class="form-control", style='height: 200px; font-size: 20px') }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.RoW_ratio.label(style='font-size: 20px; height: 30px') }}</td>
+                <td colspan="3">{{ form.RoW_ratio(id='RoW_ratio_edit', class="form-control", style='font-size: 20px') }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.pp_cooperation_mod.label(style='font-size: 20px') }}</td>
+                <td colspan="3">{{ form.pp_cooperation_mod(id='pp_cooperation_mod_edit', class="form-control", style='font-size: 20px; height: 30px', placeholder='请输入合作模式') }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.pp_partner_broker.label(style='font-size: 20px;') }}</td>
+                <td colspan="3">{{ form.pp_partner_broker(id='pp_partner_broker_edit', class="form-control", style='font-size: 20px; height: 30px;', placeholder='请输入已合作银行/券商/期货') }}</td>
+        　  </tr>
+            <tr>
+                <td>{{ form.reward_within_3yrs.label(style='font-size: 20px') }}</td>
+                <td colspan="3">{{ form.reward_within_3yrs(id='reward_within_3yrs_edit', class="form-control", style='font-size: 20px; height: 50px', placeholder='请输入三年所获奖项') }}</td>
+            </tr>
+            <tr> 
+                <td>{{ form.pp_partner_bank.label(style='font-size: 20px') }}</td>
+                <td colspan="3">{{ form.pp_partner_bank(id='pp_partner_bank_edit', class="form-control", style='font-size: 20px; height: 30px', placeholder='请输入推荐该私募机构的成员') }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.visitor.label(style='font-size: 20px') }}</td>
+                <td colspan="3">{{ form.visitor(id='visitor_edit', class="form-control", style='font-size: 20px; height: 30px', placeholder='请输入拜访人') }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.c_name.label(style='font-size: 20px') }}</td>
+                <td colspan="3">{{ form.c_name(id='c_name_edit', class="form-control", style='font-size: 20px; height: 30px', placeholder='请输入私募机构联系人姓名') }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.c_position.label(style='font-size: 20px') }}</td>
+                <td colspan="3">{{ form.c_position(id='c_position_edit', class="form-control", style='font-size: 20px; height: 30px', placeholder='请输入私募机构联系人职务') }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.c_cellphone.label(style='font-size: 20px') }}</td>
+                <td colspan="3">{{ form.c_cellphone(id='c_cellphone_edit', class="form-control", style='font-size: 20px; height: 30px', placeholder='请输入私募机构联系人联系方式') }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.address.label(style='font-size: 20px') }}</td>
+                <td colspan="3">{{ form.address(id='address_edit', class="form-control", style='font-size: 20px; height: 30px', placeholder='请输入公司地址') }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.memo.label(style='font-size: 20px') }}</td>
+                <td colspan="3">
+                    <div id="memo_edit"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ form.memoF.label(style='font-size: 20px') }}</td>
+                <td colspan="3">{{ form.memoF() }}</td>
+                <td>{{ form.memo(id="memoE", style='display: none; height: 200px;') }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.date.label(style='font-size: 20px') }}</td>
+                <td colspan="3">{{ form.date(id='date_edit', class="form-control", style='font-size: 20px; height: 30px', placeholder='请输入日期') }}</td>
+            </tr>
+            <tr class="form-actions">
+                <td colspan="4">
+                    {{ form.submit(class="btn btn-primary", style='font-size: 20px;') }}
+                    <button type="button" class="btn" onclick = "document.getElementById('editPP').style.display='none';document.getElementById('fade').style.display='none'" style="font-size: 20px">取消</button>
+                </td>
+            </tr>
+            </table>
+            </form>
+        </div>
+
+        <div id="fade" class="black_overlay"></div>
+</div>
+{% endblock %}

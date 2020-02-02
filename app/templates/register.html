@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    #form1, h1{
+        width: 250px;
+        margin:0 auto
+    } 
+</style>
+    <h1 id='h1'>修改用户信息</h1><br>
+    <form id='form1' action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.username.label }}<br>
+            {{ form.username(class='form-control',size=32, value=current_user.username) }}<br>
+            {% for error in form.username.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.oldpassword.label }}<br>
+            {{ form.oldpassword(class='form-control',size=32) }}<br>
+            {% for error in form.oldpassword.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.password.label }}<br>
+            {{ form.password(class='form-control',size=32) }}<br>
+            {% for error in form.password.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.password2.label }}<br>
+            {{ form.password2(class='form-control',size=32) }}<br>
+            {% for error in form.password2.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p style="text-align: center">{{ form.submit(class='btn btn-primary') }}</p>
+    </form>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{ % import "bootstrap/wtf.html" as wtf % }
+
+{% block content %}
+<style>
+#form1, h1{
+    width: 250px;
+    margin:0 auto
+} 
+</style>
+    <h1 id='h1' style="text-align: center">私募白名单</h1>
+    <br><br>
+    <form id='form1' action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.username.label }}<br>
+            {{ form.username(class='form-control', size=32) }}<br>
+            {% for error in form.username.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.password.label }}<br>
+            {{ form.password(class='form-control', size=32) }}<br>
+            {% for error in form.password.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p style="text-align: center; display: none">{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+        <p style="text-align: center">{{ form.submit(class='btn btn-primary') }}</p>
+    </form>
+{% endblock %}

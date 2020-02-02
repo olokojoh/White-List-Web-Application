@@ -1,0 +1,67 @@
+{% extends "bootstrap/base.html"  %}
+{% import "_macros.html" as macros %}
+
+
+{% block title %}{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-inverse" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">首页</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="http://www.shhxqh.com/">华鑫期货</a></li>
+                {% if current_user.is_anonymous %}
+                <li><a href="{{ url_for('login') }}">登录</a></li>
+                {% else %}
+                    {% if current_user.authority == '管理员' %}
+                        <li><a href="{{ url_for('admin.index') }}">后台管理</a></li>
+                    {% endif %}
+                <li><a href="{{ url_for('register') }}">{{ current_user.username }}</a></li>
+                <li><a href="{{ url_for('logout') }}">注销</a></li>
+                {% endif %}
+                {% if current_user.detail %}
+                <li><a href="{{ url_for('index') }}">返回</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<hr>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul>
+    {% for message in messages %}
+    <li style="font-size: 200%">{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/css/bootstrap-datepicker.standalone.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+{% endblock %}
+
+
+{% block content %}
+<div style='width: 100%; margin:0 auto' class="container">
+  {% block page_content %}{% endblock %}
+</div>
+{% endblock %}

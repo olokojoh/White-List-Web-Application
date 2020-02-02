@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block page_content %}
+{% for jsfile_name in script_list %}
+        <script src="{{host}}/{{jsfile_name}}.js"></script>
+{% endfor %}
+<script src="https://cdn.bootcss.com/jquery/3.0.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://assets.pyecharts.org/assets/echarts.min.js"></script>
+
+{{chart}}
+
+
+{% endblock %}
